@@ -1,0 +1,9 @@
+# Virtual Environment
+alert_threshold_env/
+
+# Python
+__pycache__/
+
+temp/
+
+*.pyc
