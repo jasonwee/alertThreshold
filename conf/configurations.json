@@ -1,0 +1,26 @@
+{
+  "configurations": [
+    {
+      "description": "every cassandra node if metric 1m count greater than 8 and happened continously for 12 times, alert",
+      "enable": "True",
+      "hostFile": "temp/list-nodes-cassandra.conf",
+      "script": "loadavg_multi.pl",
+      "metric": "1min",
+      "value" : 8,
+      "operator": ">=",
+      "threshold_operator": ">=",
+      "alert_value": 12
+    },
+    {
+      "description": "every cassandra node if metric 5m count greater than 8 and happened continously for 12 times, alert",
+      "enable": "True",
+      "hostFile": "temp/list-nodes-cassandra.conf",
+      "script": "loadavg_multi.pl",
+      "metric": "5min",
+      "value" : 8,
+      "operator": ">=",
+      "threshold_operator": ">=",
+      "alert_value": 12
+    }
+ ]
+}
