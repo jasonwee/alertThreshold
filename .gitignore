@@ -9,3 +9,5 @@ temp/
 *.pyc
 
 log/
+
+deploy.sh
