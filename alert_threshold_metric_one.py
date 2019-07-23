@@ -160,19 +160,21 @@ def check1(check_config, ssh_host, arguments, ops_timeout=60):
             scripts.append(config.script)
         cmd += '"'
         #logger.info(cmd)
-        logger.debug(cmd)
+        #logger.debug(cmd)
         command = Command(cmd, result)
         command.run(timeout=ops_timeout)
     except: 
         why_type, why_value, why_trace_back = sys.exc_info()
     #logger.info(result[0].decode('UTF-8'))
     results = result[0].decode('UTF-8').strip().split('\n')
+    #logger.info(results)
+    results = filter(None, results)
     #logger.info(len(results))
     script_results = dict(zip(scripts, results))
-    #logger.info(tuple(script_result))
-    #for key,value in script_results:
-    #    logger.info(key)
-    #    logger.info(value)
+    #logger.info(tuple(script_results))
+    #for key,value in script_results.items():
+    #    logger.info("key " + key)
+    #    logger.info("value " + value)
 
     for config in check_config:
         #logger.info("hi " + config.script)
