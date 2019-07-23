@@ -10,7 +10,7 @@ class Config:
         self.alert_value = alert_value
 
     def __str__(self):
-        return "description: %s, enable: %, script : %s, metric: %s, value: %s, operator: %s, threshold_operator: %s, alert_value: %s" % (self.description, self.enable, self.script, self.metric, self.value, self.operator, self.threshold_operator, self.alert_value)
+        return "description: %s, enable: %s, script : %s, metric: %s, value: %s, operator: %s, threshold_operator: %s, alert_value: %s" % (self.description, self.enable, self.script, self.metric, self.value, self.operator, self.threshold_operator, self.alert_value)
 
     def __repr__(self):
         return self.__str__()
