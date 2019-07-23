@@ -130,8 +130,8 @@ def start_check(logger, configs, arguments):
 
     # this one fire all , the timeout is the executor timeout
     with futures.ThreadPoolExecutor(max_workers=32) as ex:
-        args = ((config, hostname, arguments, 60) for hostname, config in configs.items())
-        results = ex.map(lambda p: threshold_check(*p), args, timeout=30)
+        args = ((config, hostname, arguments, 120) for hostname, config in configs.items())
+        results = ex.map(lambda p: threshold_check(*p), args, timeout=270)
         outputs = []
         try:
             for i in results:
