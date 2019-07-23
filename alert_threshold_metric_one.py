@@ -203,7 +203,7 @@ def check1(check_config, ssh_host, arguments, ops_timeout=60):
         count_metric = int(get_current_value(stateFile, config.metric))
 
         if cmp(count_metric, config.threshold_operator, config.alert_value):
-            email_subject = 'alert_threshold - {0} - {1}:{2}/{3}'.format(ssh_host, config.metric, count_metric, config.alert_value)
+            email_subject = 'alertThreshold - {0} - {1}:{2}/{3}'.format(ssh_host, config.metric, count_metric, config.alert_value)
             email_content = 'host         : {0}\nmetric       : {1}\nscript : {2}\ncount_metric : {3}\nalert_value  : {4}\ntimestamp    : {5}\n'.format(ssh_host, config.metric, config.script, count_metric, config.alert_value, current_datetime)
             alert(email_subject, email_content, arguments)
         else:
