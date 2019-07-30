@@ -149,16 +149,17 @@ def alert_email(email_subject, message, arguments, recipients):
     finally:
         server.quit()
 
-def alert_telegram(subject, message):
-    pass
+def alert_telegram(subject, message, arguments):
+    payload = {'chat_id': arguments.alert_telegram_chat_id, 'text': subject + "\n\n" + message}
+    url = 'https://api.telegram.org/{0}:{1}/sendMessage'.format(arguments.alert_telegram_token, arguments.alert_telegram_api_key)
+    requests.get(url, params=payload)
 
 def alert(alert_configs, subject, content, arguments):
     for alert_config in alert_configs:
         if alert_config['type'] == 'email':
             alert_email(subject, content, arguments, alert_config['recipients'])
         if alert_config['type'] == 'telegram':
-            #alert_telegram()
-            logger.info('send using telegram')
+            alert_telegram(subject, content, arguments)
 
 def check1(check_config, ssh_host, arguments, ops_timeout=60):
     #logger.info("hi, this is check1 " + ssh_host + " " + str(check_config));

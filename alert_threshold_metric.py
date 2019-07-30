@@ -170,6 +170,10 @@ def parse_argument():
     parser.add_argument('--alert_email_smtp_host', help='smtp hostname to send the alert to', required=True)
     parser.add_argument('--alert_email_smtp_port', help='smtp port', required=True)
 
+    parser.add_argument('--alert_telegram_token', help='telegram token')
+    parser.add_argument('--alert_telegram_api_key', help='telegram api key')
+    parser.add_argument('--alert_telegram_chat_id', help='telegram chat id')
+
     # Switch
     #parser.add_argument('--switch', action='store_true', help='A boolean switch')
 

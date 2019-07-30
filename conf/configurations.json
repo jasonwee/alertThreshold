@@ -26,7 +26,7 @@
       "alert_value": 12,
       "alert_methods": [
         { "type" : "email", "recipients" : ["peichieh@gmail.com"] },
-        { "type" : "telegram", "chat_id": "" }
+        { "type" : "telegram" }
       ]
     }
  ]
