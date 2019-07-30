@@ -6,7 +6,7 @@ import sys
 import time
 import threading
 
-import config as pconfig
+import config as parsed_config
 
 from concurrent import futures
 from logging.handlers import TimedRotatingFileHandler
@@ -54,8 +54,8 @@ def read_parse_config(logger, config_file):
         if 'host' not in config and 'hostFile' not in config:
             logger.error('invalid config, host or hostFile not found')
             return False, None
-        if 'metric' not in config:
-            logger.error('invalid config, metric not found')
+        if 'metrics' not in config:
+            logger.error('invalid config, metrics not found')
             return False, None
         if 'script' not in config:
             logger.error('invalid config, script not found')
@@ -86,7 +86,8 @@ def read_parse_config(logger, config_file):
         for host in hosts:
             if config['enable'] != 'True':
                 continue
-            c = pconfig.Config(config['description'], config['enable'], config['script'], config['metric'], config['value'], config['operator'], config['threshold_operator'], config['alert_value'])
+
+            c = parsed_config.Config(config['description'], config['enable'], config['script'], config['metrics'], config['value'], config['operator'], config['threshold_operator'], config['alert_value'])
             #c.add_metric(config['metric'])
             if host in configs:
                 configs[host].append(c);
