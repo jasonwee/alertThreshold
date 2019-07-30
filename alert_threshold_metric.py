@@ -87,7 +87,11 @@ def read_parse_config(logger, config_file):
             if config['enable'] != 'True':
                 continue
 
-            c = parsed_config.Config(config['description'], config['enable'], config['script'], config['metrics'], config['value'], config['operator'], config['threshold_operator'], config['alert_value'])
+            if config['exclude_hosts'] and host in config['exclude_hosts']:
+                logger.info('excluding ' + host)
+                continue
+
+            c = parsed_config.Config(config['description'], config['enable'], config['script'], config['metrics'], config['exclude_hosts'], config['value'], config['operator'], config['threshold_operator'], config['alert_value'])
             #c.add_metric(config['metric'])
             if host in configs:
                 configs[host].append(c);
