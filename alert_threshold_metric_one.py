@@ -123,7 +123,7 @@ def cmp(arg1, op, arg2):
     operation = ops.get(op)
     return operation(arg1, arg2)
 
-def alert(email_subject, message, arguments):
+def alert_root(email_subject, message, arguments):
     msg = MIMEText(message)
     msg['To'] = email.utils.formataddr(('monitoring', arguments.alert_email_recipient))
     msg['From'] = email.utils.formataddr(('SMTPD', arguments.alert_email_from))
@@ -136,6 +136,29 @@ def alert(email_subject, message, arguments):
     finally:
         server.quit()
 
+def alert_email(email_subject, message, arguments, recipients):
+    msg = MIMEText(message)
+    msg['To'] = ', '.join(recipients)
+    msg['From'] = email.utils.formataddr(('SMTPD', arguments.alert_email_from))
+    msg['Subject'] = email_subject
+
+    server = smtplib.SMTP(arguments.alert_email_smtp_host, arguments.alert_email_smtp_port)
+    #server.set_debuglevel(True)
+    try:
+        server.sendmail(arguments.alert_email_from, recipients, msg.as_string())
+    finally:
+        server.quit()
+
+def alert_telegram(subject, message):
+    pass
+
+def alert(alert_configs, subject, content, arguments):
+    for alert_config in alert_configs:
+        if alert_config['type'] == 'email':
+            alert_email(subject, content, arguments, alert_config['recipients'])
+        if alert_config['type'] == 'telegram':
+            #alert_telegram()
+            logger.info('send using telegram')
 
 def check1(check_config, ssh_host, arguments, ops_timeout=60):
     #logger.info("hi, this is check1 " + ssh_host + " " + str(check_config));
@@ -210,7 +233,8 @@ def check1(check_config, ssh_host, arguments, ops_timeout=60):
             if cmp(count_metric, config.threshold_operator, config.alert_value):
                 email_subject = 'alertThreshold - {0} - {1}:{2}/{3}'.format(ssh_host, metric, count_metric, config.alert_value)
                 email_content = 'host         : {0}\ndescription  : {6}\nmetric       : {1}\nscript       : {2}\nvalue        : {7}\ncount_metric : {3}\nalert_value  : {4}\ntimestamp    : {5}\n'.format(ssh_host, metric, config.script, count_metric, config.alert_value, current_datetime, config.description, config.value)
-                alert(email_subject, email_content, arguments)
+                alert_root(email_subject, email_content, arguments)
+                alert(config.alert_methods, email_subject, email_content, arguments)
             else:
                 pass
 
