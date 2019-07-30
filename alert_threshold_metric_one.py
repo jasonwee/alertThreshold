@@ -183,31 +183,34 @@ def check1(check_config, ssh_host, arguments, ops_timeout=60):
         #logger.info(jsonString)
         jsonObj = json.loads(jsonString)
 
-        if config.metric not in jsonObj:
-            logger.error('metric {0} not found in {1} ?!'.format(config.metric, jsonString))
-            return
+        for metric in config.metrics:
 
-        current_value = float(jsonObj[config.metric])
-        count_metric = float(get_current_value(stateFile, config.metric))
-        current_datetime = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
+            if metric not in jsonObj:
+                logger.error('metric {0} not found in {1} ?!'.format(metric, jsonString))
+                continue
 
-        if cmp(current_value, config.operator, config.value):
-            count_metric += 1
-            update_state_file(stateFile, config.metric, count_metric)
-        else:
-            update_state_file(stateFile, config.metric, 0)
+            current_value = float(jsonObj[metric])
+            count_metric = float(get_current_value(stateFile, metric))
+            current_datetime = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
+
+            if cmp(current_value, config.operator, config.value):
+                count_metric += 1
+                update_state_file(stateFile, metric, count_metric)
+            else:
+                update_state_file(stateFile, metric, 0)
         
-        update_state_file(stateFile, 'timestamp', current_datetime)
+            update_state_file(stateFile, 'timestamp', current_datetime)
 
-        # read again
-        count_metric = int(get_current_value(stateFile, config.metric))
+            # read again
+            count_metric = int(get_current_value(stateFile, metric))
 
-        if cmp(count_metric, config.threshold_operator, config.alert_value):
-            email_subject = 'alertThreshold - {0} - {1}:{2}/{3}'.format(ssh_host, config.metric, count_metric, config.alert_value)
-            email_content = 'host         : {0}\nmetric       : {1}\nscript : {2}\ncount_metric : {3}\nalert_value  : {4}\ntimestamp    : {5}\n'.format(ssh_host, config.metric, config.script, count_metric, config.alert_value, current_datetime)
-            alert(email_subject, email_content, arguments)
-        else:
-            pass
+            if cmp(count_metric, config.threshold_operator, config.alert_value):
+                email_subject = 'alertThreshold - {0} - {1}:{2}/{3}'.format(ssh_host, metric, count_metric, config.alert_value)
+                email_content = 'host         : {0}\nmetric       : {1}\nscript : {2}\ncount_metric : {3}\nalert_value  : {4}\ntimestamp    : {5}\n'.format(ssh_host, metric, config.script, count_metric, config.alert_value, current_datetime)
+                alert(email_subject, email_content, arguments)
+            else:
+                pass
+
     return threading.current_thread().name + ": done"
 
 if __name__ == '__main__':
