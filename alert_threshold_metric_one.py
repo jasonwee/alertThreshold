@@ -208,21 +208,28 @@ def check1(check_config, ssh_host, arguments, ops_timeout=60):
             continue
         jsonString = '{{ {0} }}'.format(script_results[config.script])
         #logger.info(jsonString)
-        jsonObj = json.loads(jsonString)
+        try:
+            jsonObj = json.loads(jsonString)
+        except:
+            alert_root("bad json string", jsonString, arguments)
+            continue
 
         for metric in config.metrics:
 
             if metric not in jsonObj:
                 logger.error('metric {0} not found in {1} ?!'.format(metric, jsonString))
-                continue
-
+            """
             try:
                 float(jsonObj[metric])
             except:
                 alert_root("exception alertThreshold", jsonObj[metric], arguments)
                 continue
-
-            current_value = float(jsonObj[metric])
+            """
+            try:
+                current_value = float(jsonObj.get(metric, 0))
+            except ValueError:
+                logger.info('value error = %s', jsonObj.get(metric))
+                current_value = 0
             count_metric = float(get_current_value(stateFile, metric))
             current_datetime = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
 
