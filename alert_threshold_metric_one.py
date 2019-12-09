@@ -204,7 +204,7 @@ def check1(check_config, ssh_host, arguments, ops_timeout=60):
         #logger.info("hi " + config.script)
         #logger.info(script_results[config.script])
         if config.script not in script_results:
-            logger.error("expected script %s not in script_results %s".format(config.script, script_results))
+            logger.error("expected script {0} not in script_results {1}".format(config.script, script_results))
             continue
         jsonString = '{{ {0} }}'.format(script_results[config.script])
         #logger.info(jsonString)
