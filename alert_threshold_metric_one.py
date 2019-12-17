@@ -230,19 +230,24 @@ def check1(check_config, ssh_host, arguments, ops_timeout=60):
             except ValueError:
                 logger.info('value error = %s', jsonObj.get(metric))
                 current_value = 0
-            count_metric = float(get_current_value(stateFile, metric))
+
+            # rename metric
+            state_file_metric = '{0}.{1}'.format(config.script.replace('.', '_'), metric.replace('.', '_'));
+            #logger.info('{0}'.format(state_file_metric))
+
+            count_metric = float(get_current_value(stateFile, state_file_metric))
             current_datetime = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
 
             if cmp(current_value, config.operator, config.value):
                 count_metric += 1
-                update_state_file(stateFile, metric, count_metric)
+                update_state_file(stateFile, state_file_metric, count_metric)
             else:
-                update_state_file(stateFile, metric, 0)
+                update_state_file(stateFile, state_file_metric, 0)
         
             update_state_file(stateFile, 'timestamp', current_datetime)
 
             # read again
-            count_metric = int(get_current_value(stateFile, metric))
+            count_metric = int(get_current_value(stateFile, state_file_metric))
 
             if cmp(count_metric, config.threshold_operator, config.alert_value):
                 email_subject = 'alertThreshold - {0} - {1}:{2}/{3}'.format(ssh_host, metric, count_metric, config.alert_value)
