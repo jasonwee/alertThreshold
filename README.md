@@ -1,9 +1,10 @@
 
 
 # How to run this app?
+```
 $ source alert_threshold_env/bin/activate
 $ python alert_threshold_metric.py
-
+```
 
 # How to start development
 
